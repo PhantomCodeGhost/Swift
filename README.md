@@ -44,7 +44,7 @@ merged_fixed/
 
 ### 1. Clone the repository
 ```
-git clone https://github.com/your-username/swift.git
+git clone https://github.com/PhantomCodeGhost/swift.git
 cd swift
 ```
 
