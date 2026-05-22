@@ -1,31 +1,32 @@
 # Swift — Web Music Player
 
-A lightweight, modern web-based music player built using vanilla JavaScript, HTML, and CSS.  
-Designed for speed, simplicity, and a clean listening experience.
+A premium, modern web-based music player built using vanilla JavaScript, HTML, and CSS.  
+Designed for speed, visual excellence, and a premium interactive listening experience.
 
 ---
 
 ## 🚀 Features
 
-- 🎧 Smooth audio playback  
-- ⚡ Fast, minimal UI (no heavy frameworks)  
-- 📂 Local/static music handling  
-- 🎛️ Playback controls (play, pause, seek)  
-- 🧑‍💻 Admin panel for managing content  
-- 📱 Responsive design  
+- 🎧 **Smooth Audio Playback**: Implements HTML5 audio elements with beautiful custom playback controls.
+- ⚡ **Minimal UI**: Fast, responsive layout featuring glassmorphism and animated mesh background gradients.
+- 🎹 **Keyboard Shortcuts**: Native controls for playing/pausing, changing tracks, adjusting volume, muting, and toggling panels.
+- 🖤 **Real-Time Favorites Sync**: Instantly favorites/unfavorites tracks across cards, lists, sidebar states, and player controls in real time.
+- 🎤 **Karaoke-Style Lyrics**: Timed LRC lyrics parser with smooth scrolling sync active line highlighting.
+- 🧑‍💻 **Admin Panel**: Dedicated dashboard for adding, editing, and managing the music library.
+- 📱 **Responsive Design**: Adapts beautifully to mobile, tablet, and desktop viewports, with a collapsible sidebar and sliding now-playing panel.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-merged_fixed/
+swift/
 │
-├── index.html        # Main music player UI
-├── admin.html        # Admin panel
-├── script.js         # Core player logic
-├── admin.js          # Admin functionality
-├── style.css         # Styling
+├── index.html        # Main music player UI (landing page & dashboard)
+├── admin.html        # Admin panel interface
+├── script.js         # Core player, search, favorites, lyrics, and keyboard bindings
+├── admin.js          # Admin dashboard actions & Supabase syncing
+├── style.css         # Foundational CSS design system, typography, & styling
 ├── logo.png          # Branding asset
 └── favicon.ico       # App icon
 ```
@@ -34,77 +35,73 @@ merged_fixed/
 
 ## 🛠️ Tech Stack
 
-- HTML5  
-- CSS3  
-- JavaScript (Vanilla)  
+- **HTML5** & **Semantic Layouts**
+- **CSS3** (Custom design system variables, glassmorphism, responsive grid layouts)
+- **JavaScript** (Vanilla ES6+ modules & event handling)
+- **Database** (Supabase real-time database storage for user roles and song metadata)
+
+---
+
+## 🎹 Keyboard Shortcuts
+
+The app supports key-press control commands, with a visual guide available in the **Settings** view:
+
+| Action | Shortcut Key |
+| :--- | :--- |
+| **Play / Pause** | `Space` |
+| **Next Track** | `N` or `→` (Arrow Right) |
+| **Previous Track** | `P` or `←` (Arrow Left) |
+| **Volume Up** | `↑` (Arrow Up) |
+| **Volume Down** | `↓` (Arrow Down) |
+| **Mute / Unmute** | `M` |
+| **Toggle Now Playing Panel** | `L` |
 
 ---
 
 ## ⚙️ Getting Started
 
 ### 1. Clone the repository
-```
+```bash
 git clone https://github.com/PhantomCodeGhost/swift.git
 cd swift
 ```
 
 ### 2. Run locally
-Open:
-```
-index.html
-```
-in your browser.
+Since the project is built entirely on vanilla web standards, you can open `index.html` directly or run a lightweight local server:
 
-No build step required.
+Using python:
+```bash
+python -m http.server 8000
+```
+Or node:
+```bash
+npx serve .
+```
 
 ---
 
 ## 🌐 Deployment
 
-This project is fully static and can be deployed on:
-
+This project is fully static and can be deployed directly to:
 - Netlify  
 - Vercel  
 - GitHub Pages  
-
-### Netlify (recommended)
-- Drag and drop the project folder  
-**or**
-- Connect your GitHub repo for auto-deploy  
 
 ---
 
 ## 🔐 Admin Panel
 
-Access:
+Access the dashboard by visiting:
 ```
-admin.html
+/admin.html
 ```
-
-Used for managing or controlling player-related functionality.
-
----
-
-## 📌 Notes
-
-- Ensure correct relative paths for assets when deploying  
-- No backend required (pure frontend project)  
-
----
-
-## 📈 Future Improvements
-
-- Playlist management  
-- Backend integration  
-- Search & filtering  
-- Theme toggle  
-- PWA support  
+Role-based access requires logging in using configured administrator credentials to upload, modify, or delete audio tracks and lyric timings.
 
 ---
 
 ## 🧑‍💻 Author
 
-Parth Lohar  
+- **Parth Lohar** ([PhantomCodeGhost](https://github.com/PhantomCodeGhost))
 
 ---
 
