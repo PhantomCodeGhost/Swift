@@ -117,7 +117,11 @@ window.userAuth = async function () {
     } else {
       const { data, error } = await db.from('users').select('*').eq('email', email).eq('password', password).single();
       if (error || !data) return showError('user-error', 'Invalid credentials');
-      if (data.role === 'admin') return showError('user-error', 'Use Admin Login');
+      if (data.role === 'admin') {
+        sessionStorage.setItem('emotune_user', JSON.stringify(data));
+        window.location.href = 'admin.html';
+        return;
+      }
       startApp(data);
     }
   } catch (e) { showError('user-error', 'Auth error'); }

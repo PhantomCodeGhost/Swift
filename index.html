@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Swift — Pro Audio</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkwxMiAxNE0xMiAxNEMxMiAxNi4yMDkxIDEwLjIwOTEgMTggOCAxOEM1Ljc5MDg2IDE4IDQgMTYuMjA5MSA0IDE0QzQgMTEuNzkwOSA1Ljc5MDg2IDEwIDggMTBDOC42ODM2NiAxMCA5LjMyNDMxIDEwLjE3MTUgOS44ODI4MSAxMC40NzM1TTEyIDVMMTkgOFYxMUwxMiA4IiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=" />
+  <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -37,9 +37,6 @@
     <button class="btn btn-primary" onclick="openModal('user-modal')">
       Get Started
       <i data-lucide="arrow-right"></i>
-    </button>
-    <button class="btn btn-secondary" onclick="openModal('admin-modal')">
-      Admin
     </button>
   </div>
 
@@ -247,24 +244,6 @@
         <i data-lucide="download"></i>
       </button>
     </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="admin-modal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('admin-modal')"><i data-lucide="x"></i></button>
-    <div class="modal-icon"><i data-lucide="shield"></i></div>
-    <div class="modal-title">Admin</div>
-    <div class="error-msg" id="admin-error"></div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="admin-email" placeholder="admin@swift.com" />
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="admin-password" placeholder="••••••••" />
-    </div>
-    <button class="btn btn-primary" style="width:100%" onclick="adminLogin()">Login</button>
   </div>
 </div>
 
