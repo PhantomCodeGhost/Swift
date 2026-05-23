@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,327 +8,323 @@
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<div id="intro-overlay" class="intro-overlay">
-  <video id="intro-video" src="Swift-Intro.mp4" autoplay playsinline></video>
-</div>
-<script>
-  (function() {
-    const overlay = document.getElementById('intro-overlay');
-    const video = document.getElementById('intro-video');
-    if (overlay && video) {
-      let hasStarted = false;
-      const startFadeOut = () => {
-        overlay.classList.add('fade-out');
-        setTimeout(() => overlay.remove(), 1000);
-      };
-      video.addEventListener('playing', () => {
-        hasStarted = true;
-      });
-      video.addEventListener('ended', startFadeOut);
-      video.addEventListener('error', startFadeOut);
-      video.play().catch(err => {
-        console.log('Autoplay blocked, waiting for fallback or click.');
-      });
-      const clickHandler = () => {
-        if (!hasStarted) {
-          video.play().then(() => {
-            hasStarted = true;
-          }).catch(e => startFadeOut());
-        }
-      };
-      document.addEventListener('click', clickHandler, { once: true });
-      setTimeout(() => {
-        document.removeEventListener('click', clickHandler);
-        if (!hasStarted) {
-          startFadeOut();
-        }
-      }, 1500);
-    }
-  })();
-</script>
+  <div id="intro-overlay" class="intro-overlay">
+    <video id="intro-video" src="Swift-Intro.mp4" autoplay playsinline></video>
+  </div>
+  <script>
+    (function () {
+      const overlay = document.getElementById('intro-overlay');
+      const video = document.getElementById('intro-video');
+      if (overlay && video) {
+        const startFadeOut = () => {
+          overlay.classList.add('fade-out');
+          setTimeout(() => overlay.remove(), 1000);
+        };
+        video.addEventListener('ended', startFadeOut);
+        video.addEventListener('error', startFadeOut);
+        video.play().catch(err => {
+          console.log('Autoplay blocked due to audio policy, waiting for user click.');
+          document.addEventListener('click', () => {
+            video.play().catch(e => startFadeOut());
+          }, { once: true });
+        });
+      }
+    })();
+  </script>
 
-<div class="bg-canvas">
-  <div class="bg-mesh"></div>
-</div>
+  <div class="bg-canvas">
+    <div class="bg-mesh"></div>
+  </div>
 
-<div id="landing">
-  <div class="landing-logo-wrapper">
+  <div id="landing">
     <div class="landing-logo">
-      <img src="Swift-Logo.png" alt="Swift Logo" class="landing-logo-img" />
+      <div class="logo-icon-premium">
+        <i data-lucide="music" style="width:44px;height:44px"></i>
+      </div>
       <span class="landing-logo-text">Swift</span>
     </div>
-  </div>
 
-  <div class="landing-content">
-    <h1 class="landing-headline">
-      Music that<br/>
-      <span class="landing-headline-accent">feels like you.</span>
-    </h1>
-    <p class="landing-tagline">Experience sound in its most refined form.</p>
-  </div>
-
-  <div class="landing-actions">
-    <button class="btn btn-primary" onclick="openModal('user-modal')">
-      Get Started
-      <i data-lucide="arrow-right"></i>
-    </button>
-  </div>
-
-  <a class="landing-github" href="https://github.com/PhantomCodeGhost" target="_blank" rel="noopener" title="PhantomCodeGhost on GitHub">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-    <span>PhantomCodeGhost</span>
-  </a>
-</div>
-
-<div class="app-shell hidden" id="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon">
-        <i data-lucide="music" style="width:24px;height:24px"></i>
-      </div>
-      <span class="logo-text">Swift</span>
+    <div class="landing-content">
+      <h1 class="landing-headline">
+        Music that<br />
+        <span class="landing-headline-accent">feels like you.</span>
+      </h1>
+      <p class="landing-tagline">Experience sound in its most refined form.</p>
     </div>
 
-    <nav class="sidebar-nav">
-      <p class="nav-label">Discover</p>
-      <a href="#" class="nav-item active" data-view="home">
-        <i data-lucide="home"></i>
-        <span>Home</span>
-      </a>
-      <a href="#" class="nav-item" data-view="library">
-        <i data-lucide="layout-grid"></i>
-        <span>Library</span>
-      </a>
-      <a href="#" class="nav-item" data-view="search">
-        <i data-lucide="search"></i>
-        <span>Search</span>
-      </a>
-
-      <p class="nav-label">Collection</p>
-      <a href="#" class="nav-item" data-view="playlists">
-        <i data-lucide="list-music"></i>
-        <span>Playlists</span>
-      </a>
-      <a href="#" class="nav-item" data-view="favorites">
-        <i data-lucide="heart"></i>
-        <span>Favorites</span>
-        <span class="nav-badge" id="favBadge">0</span>
-      </a>
-      <a href="#" class="nav-item" data-view="recent">
-        <i data-lucide="history"></i>
-        <span>Recent</span>
-      </a>
-
-      <p class="nav-label">Moods</p>
-      <a href="#" class="nav-item mood-nav-item" data-mood="happy">
-        <span class="mood-dot" style="background:#f59e0b"></span><span>Happy</span>
-      </a>
-      <a href="#" class="nav-item mood-nav-item" data-mood="sad">
-        <span class="mood-dot" style="background:#6366f1"></span><span>Sad</span>
-      </a>
-      <a href="#" class="nav-item mood-nav-item" data-mood="chill">
-        <span class="mood-dot" style="background:#06b6d4"></span><span>Chill</span>
-      </a>
-    </nav>
-
-    <div class="sidebar-footer" style="padding: 20px;">
-      <a href="#" class="nav-item" data-view="settings">
-        <i data-lucide="settings"></i>
-        <span>Settings</span>
-      </a>
-      <a href="admin.html" class="nav-item nav-admin-link" id="adminPanelLink" style="display:none">
-        <i data-lucide="shield-check"></i>
-        <span>Admin Panel</span>
-      </a>
-    </div>
-  </aside>
-
-  <main class="main-content" id="mainContent">
-    <div class="topbar">
-      <div class="topbar-left">
-        <button class="topbar-btn" id="sidebarToggle">
-          <i data-lucide="menu"></i>
-        </button>
-        <div class="search-bar">
-          <i data-lucide="search" style="width:16px;height:16px"></i>
-          <input type="text" id="searchInput" placeholder="Search music…" autocomplete="off" />
-        </div>
-      </div>
-      <div class="topbar-right">
-        <div class="user-chip">
-          <div class="user-avatar-small" id="userAvatarSmall">U</div>
-          <span class="user-email-chip" id="topbarEmail"></span>
-        </div>
-        <button class="btn-ghost-sm" onclick="logout()">
-          <i data-lucide="log-out"></i>
-        </button>
-      </div>
-    </div>
-
-    <div class="view-container" id="viewContainer">
-      <div class="spinner-wrap"><div class="spinner"></div></div>
-    </div>
-  </main>
-
-  <aside class="now-playing-panel" id="nowPlayingPanel">
-    <div class="np-header">
-      <span class="np-header-title">Now Playing</span>
-      <button class="np-close" id="panelClose">
-        <i data-lucide="x"></i>
+    <div class="landing-actions">
+      <button class="btn btn-primary" onclick="openModal('user-modal')">
+        Get Started
+        <i data-lucide="arrow-right"></i>
       </button>
     </div>
 
-    <div class="np-artwork-wrap">
-      <div class="np-artwork-blur" id="npArtworkBlur"></div>
-      <div class="np-artwork" id="npArtwork">
-        <i data-lucide="music" style="width:48px;height:48px;opacity:0.2"></i>
-      </div>
-    </div>
+    <a class="landing-github" href="https://github.com/PhantomCodeGhost" target="_blank" rel="noopener"
+      title="PhantomCodeGhost on GitHub">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+      </svg>
+      <span>PhantomCodeGhost</span>
+    </a>
+  </div>
 
-    <div class="np-info">
-      <div class="np-title-row">
-        <div>
-          <h2 class="np-title" id="npTitle">Select a track</h2>
-          <p class="np-artist" id="npArtist">—</p>
-          <p class="np-mood" id="npMood" style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;margin-top:4px"></p>
+  <div class="app-shell hidden" id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <i data-lucide="music" style="width:24px;height:24px"></i>
         </div>
-        <button class="fav-btn" id="npFavBtn">
+        <span class="logo-text">Swift</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <p class="nav-label">Discover</p>
+        <a href="#" class="nav-item active" data-view="home">
+          <i data-lucide="home"></i>
+          <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" data-view="library">
+          <i data-lucide="layout-grid"></i>
+          <span>Library</span>
+        </a>
+        <a href="#" class="nav-item" data-view="search">
+          <i data-lucide="search"></i>
+          <span>Search</span>
+        </a>
+
+        <p class="nav-label">Collection</p>
+        <a href="#" class="nav-item" data-view="playlists">
+          <i data-lucide="list-music"></i>
+          <span>Playlists</span>
+        </a>
+        <a href="#" class="nav-item" data-view="favorites">
           <i data-lucide="heart"></i>
-        </button>
+          <span>Favorites</span>
+          <span class="nav-badge" id="favBadge">0</span>
+        </a>
+        <a href="#" class="nav-item" data-view="recent">
+          <i data-lucide="history"></i>
+          <span>Recent</span>
+        </a>
+
+        <p class="nav-label">Moods</p>
+        <a href="#" class="nav-item mood-nav-item" data-mood="happy">
+          <span class="mood-dot" style="background:#f59e0b"></span><span>Happy</span>
+        </a>
+        <a href="#" class="nav-item mood-nav-item" data-mood="sad">
+          <span class="mood-dot" style="background:#6366f1"></span><span>Sad</span>
+        </a>
+        <a href="#" class="nav-item mood-nav-item" data-mood="chill">
+          <span class="mood-dot" style="background:#06b6d4"></span><span>Chill</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer" style="padding: 20px;">
+        <a href="#" class="nav-item" data-view="settings">
+          <i data-lucide="settings"></i>
+          <span>Settings</span>
+        </a>
+        <a href="admin.html" class="nav-item nav-admin-link" id="adminPanelLink" style="display:none">
+          <i data-lucide="shield-check"></i>
+          <span>Admin Panel</span>
+        </a>
       </div>
-    </div>
+    </aside>
 
-    <div class="panel-tabs">
-      <button class="panel-tab active" data-tab="queue">Queue</button>
-      <button class="panel-tab" data-tab="lyrics">Lyrics</button>
-    </div>
-
-    <div class="panel-tab-content active" id="tabQueue">
-      <div class="queue-list" id="queueList"></div>
-    </div>
-
-    <div class="panel-tab-content" id="tabLyrics">
-      <div class="lyrics-container" id="lyricsContainer"></div>
-    </div>
-  </aside>
-</div>
-
-<div class="bottom-player hidden" id="bottomPlayer">
-  <div class="player-grid">
-    <div class="player-left">
-      <div class="player-cover" id="playerCover">
-        <i data-lucide="music" style="opacity:0.3"></i>
-      </div>
-      <div class="player-track-info">
-        <span class="player-title" id="playerTitle">—</span>
-        <span class="player-artist" id="playerArtist">—</span>
-      </div>
-      <button class="player-fav-btn" id="playerFavBtn">
-        <i data-lucide="heart" style="width:18px;height:18px"></i>
-      </button>
-    </div>
-
-    <div class="player-center">
-      <div class="player-controls">
-        <button class="ctrl-btn" id="shuffleBtn" title="Shuffle">
-          <i data-lucide="shuffle"></i>
-        </button>
-        <button class="ctrl-btn" id="prevBtn">
-          <i data-lucide="skip-back"></i>
-        </button>
-        <button class="ctrl-btn play-btn" id="playBtn">
-          <i data-lucide="play" class="play-icon"></i>
-          <i data-lucide="pause" class="pause-icon" style="display:none"></i>
-        </button>
-        <button class="ctrl-btn" id="nextBtn">
-          <i data-lucide="skip-forward"></i>
-        </button>
-        <button class="ctrl-btn" id="repeatBtn" title="Repeat">
-          <i data-lucide="repeat"></i>
-        </button>
-      </div>
-      <div class="seek-row">
-        <span class="time-label" id="currentTime">0:00</span>
-        <div class="seek-bar-wrap" id="seekBarWrap">
-          <div class="seek-bar-bg">
-            <div class="seek-bar-fill" id="seekBarFill"></div>
-            <div class="seek-bar-thumb" id="seekBarThumb"></div>
+    <main class="main-content" id="mainContent">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-btn" id="sidebarToggle">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="search-bar">
+            <i data-lucide="search" style="width:16px;height:16px"></i>
+            <input type="text" id="searchInput" placeholder="Search music…" autocomplete="off" />
           </div>
         </div>
-        <span class="time-label" id="totalTime">0:00</span>
-      </div>
-    </div>
-
-    <div class="player-right">
-      <button class="ctrl-btn small" id="muteBtn">
-        <i data-lucide="volume-2" class="vol-icon"></i>
-        <i data-lucide="volume-x" class="mute-icon" style="display:none"></i>
-      </button>
-      <div class="volume-slider-wrap">
-        <div class="volume-bar-bg">
-          <div class="volume-bar-fill" id="volumeFill" style="width:80%"></div>
-          <div class="volume-bar-thumb" id="volumeThumb" style="left:80%"></div>
+        <div class="topbar-right">
+          <div class="user-chip">
+            <div class="user-avatar-small" id="userAvatarSmall">U</div>
+            <span class="user-email-chip" id="topbarEmail"></span>
+          </div>
+          <button class="btn-ghost-sm" onclick="logout()">
+            <i data-lucide="log-out"></i>
+          </button>
         </div>
-        <input type="range" class="volume-input" id="volumeInput" min="0" max="100" value="80" />
       </div>
-      <button class="ctrl-btn small" id="queueToggle">
-        <i data-lucide="list"></i>
-      </button>
-      <button class="ctrl-btn small" id="downloadBtn">
-        <i data-lucide="download"></i>
-      </button>
+
+      <div class="view-container" id="viewContainer">
+        <div class="spinner-wrap">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="now-playing-panel" id="nowPlayingPanel">
+      <div class="np-header">
+        <span class="np-header-title">Now Playing</span>
+        <button class="np-close" id="panelClose">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="np-artwork-wrap">
+        <div class="np-artwork-blur" id="npArtworkBlur"></div>
+        <div class="np-artwork" id="npArtwork">
+          <i data-lucide="music" style="width:48px;height:48px;opacity:0.2"></i>
+        </div>
+      </div>
+
+      <div class="np-info">
+        <div class="np-title-row">
+          <div>
+            <h2 class="np-title" id="npTitle">Select a track</h2>
+            <p class="np-artist" id="npArtist">—</p>
+            <p class="np-mood" id="npMood"
+              style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;margin-top:4px"></p>
+          </div>
+          <button class="fav-btn" id="npFavBtn">
+            <i data-lucide="heart"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-tabs">
+        <button class="panel-tab active" data-tab="queue">Queue</button>
+        <button class="panel-tab" data-tab="lyrics">Lyrics</button>
+      </div>
+
+      <div class="panel-tab-content active" id="tabQueue">
+        <div class="queue-list" id="queueList"></div>
+      </div>
+
+      <div class="panel-tab-content" id="tabLyrics">
+        <div class="lyrics-container" id="lyricsContainer"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="bottom-player hidden" id="bottomPlayer">
+    <div class="player-grid">
+      <div class="player-left">
+        <div class="player-cover" id="playerCover">
+          <i data-lucide="music" style="opacity:0.3"></i>
+        </div>
+        <div class="player-track-info">
+          <span class="player-title" id="playerTitle">—</span>
+          <span class="player-artist" id="playerArtist">—</span>
+        </div>
+        <button class="player-fav-btn" id="playerFavBtn">
+          <i data-lucide="heart" style="width:18px;height:18px"></i>
+        </button>
+      </div>
+
+      <div class="player-center">
+        <div class="player-controls">
+          <button class="ctrl-btn" id="shuffleBtn" title="Shuffle">
+            <i data-lucide="shuffle"></i>
+          </button>
+          <button class="ctrl-btn" id="prevBtn">
+            <i data-lucide="skip-back"></i>
+          </button>
+          <button class="ctrl-btn play-btn" id="playBtn">
+            <i data-lucide="play" class="play-icon"></i>
+            <i data-lucide="pause" class="pause-icon" style="display:none"></i>
+          </button>
+          <button class="ctrl-btn" id="nextBtn">
+            <i data-lucide="skip-forward"></i>
+          </button>
+          <button class="ctrl-btn" id="repeatBtn" title="Repeat">
+            <i data-lucide="repeat"></i>
+          </button>
+        </div>
+        <div class="seek-row">
+          <span class="time-label" id="currentTime">0:00</span>
+          <div class="seek-bar-wrap" id="seekBarWrap">
+            <div class="seek-bar-bg">
+              <div class="seek-bar-fill" id="seekBarFill"></div>
+              <div class="seek-bar-thumb" id="seekBarThumb"></div>
+            </div>
+          </div>
+          <span class="time-label" id="totalTime">0:00</span>
+        </div>
+      </div>
+
+      <div class="player-right">
+        <button class="ctrl-btn small" id="muteBtn">
+          <i data-lucide="volume-2" class="vol-icon"></i>
+          <i data-lucide="volume-x" class="mute-icon" style="display:none"></i>
+        </button>
+        <div class="volume-slider-wrap">
+          <div class="volume-bar-bg">
+            <div class="volume-bar-fill" id="volumeFill" style="width:80%"></div>
+            <div class="volume-bar-thumb" id="volumeThumb" style="left:80%"></div>
+          </div>
+          <input type="range" class="volume-input" id="volumeInput" min="0" max="100" value="80" />
+        </div>
+        <button class="ctrl-btn small" id="queueToggle">
+          <i data-lucide="list"></i>
+        </button>
+        <button class="ctrl-btn small" id="downloadBtn">
+          <i data-lucide="download"></i>
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-overlay" id="user-modal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal('user-modal')"><i data-lucide="x"></i></button>
-    <div class="modal-icon"><i data-lucide="user"></i></div>
-    <div class="modal-title" id="user-modal-title">Swift Music</div>
-    <div class="error-msg" id="user-error"></div>
-    <div class="success-msg" id="user-success"></div>
-    <div class="form-group hidden" id="user-name-group">
-      <input type="text" id="user-name" placeholder="Name" />
-    </div>
-    <div class="form-group">
-      <input type="email" id="user-email" placeholder="Email" />
-    </div>
-    <div class="form-group">
-      <input type="password" id="user-password" placeholder="Password" />
-    </div>
-    <button class="btn btn-primary" style="width:100%" id="user-submit-btn" onclick="userAuth()">Continue</button>
-    <div class="form-toggle">
-      <span id="form-toggle-text">New user?</span>
-      <a onclick="toggleAuthMode()"> <span id="form-toggle-link">Register here</span></a>
+  <div class="modal-overlay" id="user-modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('user-modal')"><i data-lucide="x"></i></button>
+      <div class="modal-icon"><i data-lucide="user"></i></div>
+      <div class="modal-title" id="user-modal-title">Swift Music</div>
+      <div class="error-msg" id="user-error"></div>
+      <div class="success-msg" id="user-success"></div>
+      <div class="form-group hidden" id="user-name-group">
+        <input type="text" id="user-name" placeholder="Name" />
+      </div>
+      <div class="form-group">
+        <input type="email" id="user-email" placeholder="Email" />
+      </div>
+      <div class="form-group">
+        <input type="password" id="user-password" placeholder="Password" />
+      </div>
+      <button class="btn btn-primary" style="width:100%" id="user-submit-btn" onclick="userAuth()">Continue</button>
+      <div class="form-toggle">
+        <span id="form-toggle-text">New user?</span>
+        <a onclick="toggleAuthMode()"> <span id="form-toggle-link">Register here</span></a>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <div class="toast" id="toast"></div>
 
-<div class="context-menu" id="contextMenu">
-  <button class="ctx-item" data-action="play"><i data-lucide="play"></i> Play</button>
-  <button class="ctx-item" data-action="queue"><i data-lucide="list-plus"></i> Add to Queue</button>
-  <button class="ctx-item" data-action="favorite"><i data-lucide="heart"></i> Favorite</button>
-  <button class="ctx-item" data-action="download"><i data-lucide="download"></i> Download</button>
-</div>
+  <div class="context-menu" id="contextMenu">
+    <button class="ctx-item" data-action="play"><i data-lucide="play"></i> Play</button>
+    <button class="ctx-item" data-action="queue"><i data-lucide="list-plus"></i> Add to Queue</button>
+    <button class="ctx-item" data-action="favorite"><i data-lucide="heart"></i> Favorite</button>
+    <button class="ctx-item" data-action="download"><i data-lucide="download"></i> Download</button>
+  </div>
 
-<audio id="audio-player" preload="metadata"></audio>
+  <audio id="audio-player" preload="metadata"></audio>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="script.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    lucide.createIcons();
-  });
-  window.refreshIcons = () => lucide.createIcons();
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+    window.refreshIcons = () => lucide.createIcons();
+  </script>
 </body>
+
 </html>
