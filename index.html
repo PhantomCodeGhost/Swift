@@ -11,19 +11,72 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
-  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), visibility 1s;
+      cursor: pointer;
+    }
+    .intro-overlay video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .intro-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .intro-overlay.fade-out video {
+      transform: scale(1.08);
+    }
+    .play-prompt {
+      position: absolute;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      text-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+    .play-prompt.show {
+      opacity: 0.6;
+      transform: translateY(0);
+      animation: pulseText 2s infinite ease-in-out;
+    }
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+  </style>
 </head>
 
 <body>
 
   <div id="intro-overlay" class="intro-overlay">
-    <video id="intro-video" src="Swift-Intro.mp4" autoplay playsinline></video>
+    <video id="intro-video" src="Swift-Intro.mp4" autoplay playsinline preload="auto"></video>
+    <div id="play-prompt" class="play-prompt">Tap to Start</div>
   </div>
   <script>
     (function () {
       const overlay = document.getElementById('intro-overlay');
       const video = document.getElementById('intro-video');
+      const prompt = document.getElementById('play-prompt');
       if (overlay && video) {
         const startFadeOut = () => {
           overlay.classList.add('fade-out');
@@ -31,9 +84,12 @@
         };
         video.addEventListener('ended', startFadeOut);
         video.addEventListener('error', startFadeOut);
+        
         video.play().catch(err => {
-          console.log('Autoplay blocked due to audio policy, waiting for user click.');
-          document.addEventListener('click', () => {
+          console.log('Autoplay blocked, showing prompt.');
+          if (prompt) prompt.classList.add('show');
+          overlay.addEventListener('click', () => {
+            if (prompt) prompt.classList.remove('show');
             video.play().catch(e => startFadeOut());
           }, { once: true });
         });
@@ -46,36 +102,37 @@
   </div>
 
   <div id="landing">
-    <div class="landing-logo">
-      <div class="logo-icon-premium">
-        <i data-lucide="music" style="width:44px;height:44px"></i>
-      </div>
-      <span class="landing-logo-text">Swift</span>
-    </div>
-
-    <div class="landing-content">
-      <h1 class="landing-headline">
-        Music that<br />
-        <span class="landing-headline-accent">feels like you.</span>
-      </h1>
-      <p class="landing-tagline">Experience sound in its most refined form.</p>
-    </div>
-
-    <div class="landing-actions">
-      <button class="btn btn-primary" onclick="openModal('user-modal')">
-        Get Started
-        <i data-lucide="arrow-right"></i>
-      </button>
-    </div>
-
     <a class="landing-github" href="https://github.com/PhantomCodeGhost" target="_blank" rel="noopener"
       title="PhantomCodeGhost on GitHub">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
         <path
           d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
       </svg>
-      <span>PhantomCodeGhost</span>
     </a>
+
+    <div class="landing-hero">
+      <div class="landing-logo">
+        <div class="logo-icon-premium">
+          <img src="favicon.png" alt="Swift Logo" style="width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(255,255,255,0.1));" />
+        </div>
+        <span class="landing-logo-text">Swift</span>
+      </div>
+
+      <div class="landing-content">
+        <h1 class="landing-headline">
+          Music that<br />
+          <span class="landing-headline-accent">feels like you.</span>
+        </h1>
+        <p class="landing-tagline">Experience sound in its most refined form.</p>
+      </div>
+
+      <div class="landing-actions">
+        <button class="btn btn-primary" onclick="openModal('user-modal')">
+          Get Started
+          <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="app-shell hidden" id="app">
@@ -318,6 +375,7 @@
   <audio id="audio-player" preload="metadata"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script defer src="script.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
