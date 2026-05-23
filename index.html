@@ -15,15 +15,11 @@
 
 <div id="intro-overlay" class="intro-overlay">
   <video id="intro-video" src="Swift-Intro.mp4" autoplay playsinline></video>
-  <div id="intro-unmute-prompt" class="intro-prompt hidden">
-    <span>Click to Begin</span>
-  </div>
 </div>
 <script>
   (function() {
     const overlay = document.getElementById('intro-overlay');
     const video = document.getElementById('intro-video');
-    const prompt = document.getElementById('intro-unmute-prompt');
     if (overlay && video) {
       const startFadeOut = () => {
         overlay.classList.add('fade-out');
@@ -32,10 +28,8 @@
       video.addEventListener('ended', startFadeOut);
       video.addEventListener('error', startFadeOut);
       video.play().catch(err => {
-        console.log('Autoplay blocked due to audio policy, showing enter prompt.');
-        if (prompt) prompt.classList.remove('hidden');
+        console.log('Autoplay blocked due to audio policy, waiting for user click.');
         document.addEventListener('click', () => {
-          if (prompt) prompt.classList.add('hidden');
           video.play().catch(e => startFadeOut());
         }, { once: true });
       });
@@ -284,6 +278,9 @@
     <div class="modal-title" id="user-modal-title">Swift Music</div>
     <div class="error-msg" id="user-error"></div>
     <div class="success-msg" id="user-success"></div>
+    <div class="form-group hidden" id="user-name-group">
+      <input type="text" id="user-name" placeholder="Name" />
+    </div>
     <div class="form-group">
       <input type="email" id="user-email" placeholder="Email" />
     </div>

@@ -442,26 +442,3 @@ body {
 .intro-overlay.fade-out video {
   transform: scale(1.08);
 }
-
-.intro-prompt {
-  position: absolute;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  font-weight: 700;
-  cursor: pointer;
-  animation: pulsePrompt 2s infinite ease-in-out;
-  pointer-events: none;
-  background: rgba(0,0,0,0.65);
-  padding: 14px 28px;
-  border-radius: 50px;
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(8px);
-  z-index: 10000;
-}
-@keyframes pulsePrompt {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.04); opacity: 1; box-shadow: 0 0 20px rgba(255,255,255,0.15); }
-}

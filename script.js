@@ -100,6 +100,7 @@ window.toggleAuthMode = () => {
   $('#user-modal-title').textContent = isRegisterMode ? 'Create Account' : 'Welcome Back';
   $('#user-submit-btn').textContent  = isRegisterMode ? 'Register' : 'Continue';
   $('#form-toggle-link').textContent = isRegisterMode ? 'Login here' : 'Register here';
+  $('#user-name-group').classList.toggle('hidden', !isRegisterMode);
 };
 
 window.userAuth = async function () {
@@ -108,9 +109,11 @@ window.userAuth = async function () {
   if (!email || !password) return showError('user-error', 'Fill all fields');
   try {
     if (isRegisterMode) {
+      const name = $('#user-name').value.trim();
+      if (!name) return showError('user-error', 'Name is required');
       const { data: exists } = await db.from('users').select('id').eq('email', email).single();
       if (exists) return showError('user-error', 'Email registered. Login instead.');
-      const { data, error } = await db.from('users').insert([{ email, password, role: 'user' }]).select().single();
+      const { data, error } = await db.from('users').insert([{ name, email, password, role: 'user' }]).select().single();
       if (error) throw error;
       showSuccess('user-success', 'Account created!');
       setTimeout(() => startApp(data), 1000);
@@ -134,8 +137,8 @@ async function startApp(user) {
   $('#landing').classList.add('hidden');
   $('#app').classList.remove('hidden');
   $('#bottomPlayer').classList.remove('hidden');
-  $('#topbarEmail').textContent = user.email;
-  $('#userAvatarSmall').textContent = user.email.charAt(0).toUpperCase();
+  $('#topbarEmail').textContent = user.name || user.email;
+  $('#userAvatarSmall').textContent = (user.name || user.email).charAt(0).toUpperCase();
   updateFavBadge();
   await loadAllSongs();
   bindPlayerControls();
@@ -202,7 +205,7 @@ function renderView(view) {
 function renderHome() {
   applyFilters();
   const div = document.createElement('div');
-  const userName = (currentUser?.email || '').split('@')[0];
+  const userName = currentUser?.name || (currentUser?.email || '').split('@')[0];
   div.innerHTML = `<div class="greeting-section"><h1 class="greeting-text">${getGreeting()}, ${escHtml(userName)}</h1><p class="greeting-sub">Your curated soundscape.</p></div>`;
   
   const stats = `<div class="stats-bar">
@@ -321,7 +324,7 @@ function renderSettings() {
   const div = document.createElement('div');
   div.innerHTML = `<div class="section-header"><h2 class="section-title">Settings</h2></div>
     <div class="settings-grid">
-      <div class="stat-card"><strong>Account</strong><p>${escHtml(currentUser?.email)}</p><button class="btn-ghost-sm" onclick="logout()">Logout</button></div>
+      <div class="stat-card"><strong>Account</strong><p>${escHtml(currentUser?.name || 'User')}</p><p style="font-size:0.8rem;opacity:0.6">${escHtml(currentUser?.email)}</p><button class="btn-ghost-sm" onclick="logout()">Logout</button></div>
       <div class="stat-card"><strong>Data</strong><p>${favorites.size} favs</p><button class="btn-ghost-sm" onclick="localStorage.clear(); location.reload();">Clear cache</button></div>
       <div class="stat-card" style="grid-column: 1 / -1; text-align: left; align-items: stretch;">
         <strong>Keyboard Shortcuts</strong>
