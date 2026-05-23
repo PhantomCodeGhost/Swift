@@ -13,6 +13,36 @@
 </head>
 <body>
 
+<div id="intro-overlay" class="intro-overlay">
+  <video id="intro-video" src="Swift-Intro.mp4" autoplay playsinline></video>
+  <div id="intro-unmute-prompt" class="intro-prompt hidden">
+    <span>Click to Begin</span>
+  </div>
+</div>
+<script>
+  (function() {
+    const overlay = document.getElementById('intro-overlay');
+    const video = document.getElementById('intro-video');
+    const prompt = document.getElementById('intro-unmute-prompt');
+    if (overlay && video) {
+      const startFadeOut = () => {
+        overlay.classList.add('fade-out');
+        setTimeout(() => overlay.remove(), 1000);
+      };
+      video.addEventListener('ended', startFadeOut);
+      video.addEventListener('error', startFadeOut);
+      video.play().catch(err => {
+        console.log('Autoplay blocked due to audio policy, showing enter prompt.');
+        if (prompt) prompt.classList.remove('hidden');
+        document.addEventListener('click', () => {
+          if (prompt) prompt.classList.add('hidden');
+          video.play().catch(e => startFadeOut());
+        }, { once: true });
+      });
+    }
+  })();
+</script>
+
 <div class="bg-canvas">
   <div class="bg-mesh"></div>
 </div>
