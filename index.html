@@ -21,18 +21,33 @@
     const overlay = document.getElementById('intro-overlay');
     const video = document.getElementById('intro-video');
     if (overlay && video) {
+      let hasStarted = false;
       const startFadeOut = () => {
         overlay.classList.add('fade-out');
         setTimeout(() => overlay.remove(), 1000);
       };
+      video.addEventListener('playing', () => {
+        hasStarted = true;
+      });
       video.addEventListener('ended', startFadeOut);
       video.addEventListener('error', startFadeOut);
       video.play().catch(err => {
-        console.log('Autoplay blocked due to audio policy, waiting for user click.');
-        document.addEventListener('click', () => {
-          video.play().catch(e => startFadeOut());
-        }, { once: true });
+        console.log('Autoplay blocked, waiting for fallback or click.');
       });
+      const clickHandler = () => {
+        if (!hasStarted) {
+          video.play().then(() => {
+            hasStarted = true;
+          }).catch(e => startFadeOut());
+        }
+      };
+      document.addEventListener('click', clickHandler, { once: true });
+      setTimeout(() => {
+        document.removeEventListener('click', clickHandler);
+        if (!hasStarted) {
+          startFadeOut();
+        }
+      }, 1500);
     }
   })();
 </script>
