@@ -12,96 +12,20 @@
     href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .intro-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), visibility 1s;
-      cursor: pointer;
-    }
-    .intro-overlay video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .intro-overlay.fade-out {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .intro-overlay.fade-out video {
-      transform: scale(1.08);
-    }
-    .play-prompt {
-      position: absolute;
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
-      text-shadow: 0 0 20px rgba(255,255,255,0.4);
-    }
-    .play-prompt.show {
-      opacity: 0.6;
-      transform: translateY(0);
-      animation: pulseText 2s infinite ease-in-out;
-    }
-    @keyframes pulseText {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 0.8; }
-    }
-  </style>
 </head>
 
 <body>
 
-  <div id="intro-overlay" class="intro-overlay">
-    <video id="intro-video" src="Swift-Intro.mp4" autoplay playsinline preload="auto"></video>
-    <div id="play-prompt" class="play-prompt">Tap to Start</div>
-  </div>
-  <script>
-    (function () {
-      const overlay = document.getElementById('intro-overlay');
-      const video = document.getElementById('intro-video');
-      const prompt = document.getElementById('play-prompt');
-      if (overlay && video) {
-        const startFadeOut = () => {
-          overlay.classList.add('fade-out');
-          setTimeout(() => overlay.remove(), 1000);
-        };
-        video.addEventListener('ended', startFadeOut);
-        video.addEventListener('error', startFadeOut);
-        
-        video.play().catch(err => {
-          console.log('Autoplay blocked, showing prompt.');
-          if (prompt) prompt.classList.add('show');
-          overlay.addEventListener('click', () => {
-            if (prompt) prompt.classList.remove('show');
-            video.play().catch(e => startFadeOut());
-          }, { once: true });
-        });
-      }
-    })();
-  </script>
+  <!-- Custom Cursor (Desktop Only) -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
   <div class="bg-canvas">
     <div class="bg-mesh"></div>
   </div>
 
   <div id="landing">
+    <div id="snow-particles"></div>
     <a class="landing-github" href="https://github.com/PhantomCodeGhost" target="_blank" rel="noopener"
       title="PhantomCodeGhost on GitHub">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -376,10 +300,43 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script defer src="script.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+
+      // Snowfall particles — hero page only
+      if (window.particlesJS && document.getElementById('snow-particles')) {
+        particlesJS('snow-particles', {
+          particles: {
+            number: { value: 80, density: { enable: true, value_area: 800 } },
+            color: { value: '#ffffff' },
+            shape: { type: 'circle' },
+            opacity: { value: 0.4, random: true, anim: { enable: true, speed: 0.3, opacity_min: 0.1, sync: false } },
+            size: { value: 3, random: true, anim: { enable: true, speed: 1, size_min: 0.5, sync: false } },
+            line_linked: { enable: false },
+            move: {
+              enable: true, speed: 1.2, direction: 'bottom', random: true,
+              straight: false, out_mode: 'out', bounce: false,
+              attract: { enable: false }
+            }
+          },
+          interactivity: {
+            detect_on: 'canvas',
+            events: {
+              onhover: { enable: true, mode: 'bubble' },
+              onclick: { enable: true, mode: 'repulse' },
+              resize: true
+            },
+            modes: {
+              bubble: { distance: 150, size: 5, duration: 2, opacity: 0.6 },
+              repulse: { distance: 200, duration: 0.4 }
+            }
+          },
+          retina_detect: true
+        });
+      }
     });
     window.refreshIcons = () => lucide.createIcons();
   </script>

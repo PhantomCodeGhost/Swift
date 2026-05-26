@@ -661,3 +661,82 @@ function formatTime(s) { if(isNaN(s)) return '0:00'; return Math.floor(s/60) + '
 
 const savedUser = localStorage.getItem('swift_user');
 if (savedUser) startApp(JSON.parse(savedUser));
+
+/* ─── Custom Cursor (Desktop Only) ─────────────────────────────── */
+(function initCustomCursor() {
+  // Only activate on devices with a fine pointer (mouse)
+  if (!window.matchMedia('(pointer: fine)').matches) return;
+
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  if (!dot || !ring) return;
+
+  let mouseX = -100, mouseY = -100;
+  let ringX = -100, ringY = -100;
+  let isVisible = false;
+  let rafId = null;
+
+  // Smooth trailing for the ring
+  const LERP = 0.15;
+
+  function animate() {
+    ringX += (mouseX - ringX) * LERP;
+    ringY += (mouseY - ringY) * LERP;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    rafId = requestAnimationFrame(animate);
+  }
+  rafId = requestAnimationFrame(animate);
+
+  // Move dot instantly
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top = mouseY + 'px';
+
+    if (!isVisible) {
+      isVisible = true;
+      dot.classList.add('visible');
+      ring.classList.add('visible');
+    }
+  });
+
+  // Hide when mouse leaves the window
+  document.addEventListener('mouseleave', () => {
+    isVisible = false;
+    dot.classList.remove('visible');
+    ring.classList.remove('visible');
+  });
+  document.addEventListener('mouseenter', () => {
+    isVisible = true;
+    dot.classList.add('visible');
+    ring.classList.add('visible');
+  });
+
+  // Hover effect on interactive elements
+  const hoverSelector = 'a, button, input, [role="button"], .song-card, .recent-chip, .mood-pill, .playlist-card, .song-list-item, .stat-clickable, .nav-item, .panel-tab';
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest(hoverSelector)) {
+      dot.classList.add('hover');
+      ring.classList.add('hover');
+    }
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest(hoverSelector)) {
+      dot.classList.remove('hover');
+      ring.classList.remove('hover');
+    }
+  });
+
+  // Click effect
+  document.addEventListener('mousedown', () => {
+    dot.classList.add('click');
+    ring.classList.add('click');
+  });
+  document.addEventListener('mouseup', () => {
+    dot.classList.remove('click');
+    ring.classList.remove('click');
+  });
+})();
