@@ -509,7 +509,12 @@ function updateKaraokeUI(s) {
   
   const bg = $('#karaokeBg');
   if (bg) {
-    bg.style.backgroundImage = s.cover_url ? `url(${s.cover_url})` : 'none';
+    if (s.cover_url) {
+      bg.style.backgroundImage = `url("${s.cover_url}")`;
+      bg.style.background = '';
+    } else {
+      bg.style.background = getGradient(s._gradIdx || s.id);
+    }
   }
   
   if ($('#karaokeTotalTime')) $('#karaokeTotalTime').textContent = formatTime(audio.duration || 0);

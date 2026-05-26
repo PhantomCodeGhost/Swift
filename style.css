@@ -2559,11 +2559,11 @@ body {
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: blur(80px) brightness(0.25);
-  opacity: 0.7;
+  filter: blur(60px) brightness(0.4);
+  opacity: 0.85;
   z-index: 0;
   transform: scale(1.1);
-  transition: background 1s ease;
+  transition: background-image 1s ease;
 }
 
 .karaoke-header {
@@ -2618,6 +2618,7 @@ body {
   flex: 1;
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
+  grid-template-rows: minmax(0, 1fr);
   align-items: center;
   padding: 0 48px;
   gap: 64px;
@@ -2630,17 +2631,32 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 0;
+  height: 100%;
 }
 
 .karaoke-artwork-wrap {
-  width: 380px;
-  height: 380px;
+  width: min(380px, 90%);
+  max-height: 42vh;
+  aspect-ratio: 1 / 1;
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
-  background: var(--bg-card);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: transform 0.5s ease;
   animation: pulse 6s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.95);
+  }
 }
 
 .karaoke-artwork-wrap:hover {
@@ -2667,6 +2683,7 @@ body {
   display: flex;
   align-items: center;
   position: relative;
+  min-height: 0;
   mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
 }
@@ -2679,7 +2696,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 240px 0;
+  padding: 30vh 0;
   scroll-behavior: smooth;
 }
 
@@ -2810,50 +2827,45 @@ body {
 }
 
 /* ─── Responsive Karaoke Mode ─── */
-@media (max-width: 900px) {
+@media (max-width: 950px) {
   .karaoke-header {
-    padding: 24px;
+    padding: 24px 32px;
   }
   
   .karaoke-title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
   
   .karaoke-artist {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
   
   .karaoke-close-btn {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
   }
   
   .karaoke-body {
-    grid-template-columns: 1fr;
-    padding: 0 24px;
+    padding: 0 32px;
+    gap: 36px;
   }
   
-  .karaoke-art-section {
-    display: none;
-  }
-  
-  .karaoke-lyrics-container {
-    align-items: center;
+  .karaoke-artwork-wrap {
+    width: min(300px, 90%);
+    max-height: 38vh;
   }
   
   .karaoke-lyric-line {
-    font-size: 1.8rem;
-    padding: 14px 0;
-    text-align: center;
-    transform-origin: center center;
+    font-size: 2rem;
+    padding: 16px 0;
   }
   
   .karaoke-lyric-line.active {
-    font-size: 2.4rem;
+    font-size: 2.8rem;
   }
   
   .karaoke-footer {
-    padding: 24px;
+    padding: 32px;
   }
   
   .karaoke-playback-controls {
@@ -2868,6 +2880,79 @@ body {
   .karaoke-playback-controls .ctrl-btn.play-btn {
     width: 52px;
     height: 52px;
+  }
+}
+
+/* Vertical responsiveness for shorter screens (like height <= 600px) */
+@media (max-height: 600px) {
+  .karaoke-header {
+    padding: 16px 32px;
+  }
+  
+  .karaoke-title {
+    font-size: 1.6rem;
+  }
+  
+  .karaoke-artist {
+    font-size: 0.9rem;
+  }
+  
+  .karaoke-close-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .karaoke-body {
+    padding: 0 32px;
+    gap: 24px;
+  }
+  
+  .karaoke-artwork-wrap {
+    width: min(240px, 85%);
+    max-height: 35vh;
+  }
+  
+  .karaoke-lyrics-container {
+    padding: 15vh 0;
+  }
+  
+  .karaoke-lyric-line {
+    font-size: 1.8rem;
+    padding: 12px 0;
+  }
+  
+  .karaoke-lyric-line.active {
+    font-size: 2.4rem;
+  }
+  
+  .karaoke-footer {
+    padding: 16px 32px;
+  }
+  
+  .karaoke-controls-wrap {
+    gap: 12px;
+  }
+}
+
+/* Mobile: hide artwork and center lyrics */
+@media (max-width: 650px) {
+  .karaoke-body {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0 20px;
+  }
+  
+  .karaoke-art-section {
+    display: none;
+  }
+  
+  .karaoke-lyrics-container {
+    align-items: center;
+  }
+  
+  .karaoke-lyric-line {
+    text-align: center;
+    transform-origin: center center;
   }
 }
 
