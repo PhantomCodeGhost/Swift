@@ -59,6 +59,8 @@ let currentLyrics   = [];
 let activeLyricIndex = -1;
 let isSeekDragging  = false;
 let contextTargetId = null;
+let isKaraoke = false;
+let activeKaraokeLyricIndex = -1;
 
 const audio = document.getElementById('audio-player');
 const $ = (sel) => document.querySelector(sel);
@@ -440,6 +442,84 @@ function syncLyrics(time) {
   }
 }
 
+function renderKaraokeLyrics(lyrics) {
+  const container = $('#karaokeLyricsContainer');
+  if (!container) return;
+  if (!lyrics.length) { 
+    container.innerHTML = '<p style="opacity:0.5;text-align:center;margin-top:40px;font-size:2rem">No lyrics available</p>'; 
+    return; 
+  }
+  container.innerHTML = '';
+  lyrics.forEach((line, i) => {
+    const el = document.createElement('div');
+    el.className = 'karaoke-lyric-line';
+    el.textContent = line.text;
+    el.onclick = () => { audio.currentTime = line.time; };
+    container.appendChild(el);
+  });
+}
+
+function syncKaraokeLyrics(time) {
+  if (!currentLyrics.length) return;
+  for (let i = 0; i < currentLyrics.length; i++) {
+    const curr = currentLyrics[i], next = currentLyrics[i + 1];
+    if (time >= curr.time && (!next || time < next.time)) {
+      if (i === activeKaraokeLyricIndex) return;
+      activeKaraokeLyricIndex = i;
+      const lines = $$('.karaoke-lyric-line');
+      lines.forEach(l => l.classList.remove('active'));
+      if (lines[i]) { 
+        lines[i].classList.add('active'); 
+        lines[i].scrollIntoView({ block: 'center', behavior: 'smooth' }); 
+      }
+      break;
+    }
+  }
+}
+
+function toggleKaraoke(force) {
+  isKaraoke = (force !== undefined) ? force : !isKaraoke;
+  const view = $('#karaokeView');
+  if (!view) return;
+  
+  if (isKaraoke) {
+    view.classList.remove('hidden');
+    const s = filteredSongs[currentIndex];
+    if (s) {
+      updateKaraokeUI(s);
+      renderKaraokeLyrics(currentLyrics);
+      activeKaraokeLyricIndex = -1;
+      syncKaraokeLyrics(audio.currentTime);
+    }
+    $('#karaokeToggle')?.classList.add('active');
+  } else {
+    view.classList.add('hidden');
+    $('#karaokeToggle')?.classList.remove('active');
+  }
+}
+
+function updateKaraokeUI(s) {
+  if ($('#karaokeTitle')) $('#karaokeTitle').textContent = s.title;
+  if ($('#karaokeArtist')) $('#karaokeArtist').textContent = s.artist;
+  
+  const cover = $('#karaokeArtwork');
+  if (cover) {
+    cover.innerHTML = s.cover_url ? `<img src="${s.cover_url}">` : `<i data-lucide="music" style="width:120px;height:120px;opacity:0.2"></i>`;
+  }
+  
+  const bg = $('#karaokeBg');
+  if (bg) {
+    bg.style.backgroundImage = s.cover_url ? `url(${s.cover_url})` : 'none';
+  }
+  
+  if ($('#karaokeTotalTime')) $('#karaokeTotalTime').textContent = formatTime(audio.duration || 0);
+  
+  $$('#karaokeShuffleBtn').forEach(el => el.classList.toggle('active', isShuffle));
+  $$('#karaokeRepeatBtn').forEach(el => el.classList.toggle('active', repeatMode !== 'none'));
+  
+  if (window.refreshIcons) window.refreshIcons();
+}
+
 /* ─── Player Logic ────────────────────────────────────────────── */
 function playSong(idx) {
   if (idx < 0 || idx >= filteredSongs.length) return;
@@ -458,6 +538,12 @@ function playSong(idx) {
   updatePlayerUI(s);
   updateNowPlaying(s);
   highlightCurrentCard();
+  if (isKaraoke) {
+    updateKaraokeUI(s);
+    renderKaraokeLyrics(currentLyrics);
+    activeKaraokeLyricIndex = -1;
+    syncKaraokeLyrics(audio.currentTime);
+  }
 }
 
 function updatePlayerUI(s) {
@@ -491,9 +577,10 @@ function updateNowPlaying(s) {
 function updatePlayBtn() {
   const playing = !audio.paused;
   isPlaying = playing;
-  $('.play-icon').style.display = playing ? 'none' : 'block';
-  $('.pause-icon').style.display = playing ? 'block' : 'none';
+  $$('.play-icon').forEach(el => el.style.display = playing ? 'none' : 'block');
+  $$('.pause-icon').forEach(el => el.style.display = playing ? 'block' : 'none');
   if ($('#npArtwork')) $('#npArtwork').classList.toggle('playing', playing);
+  if ($('#karaokeArtwork')) $('#karaokeArtwork').classList.toggle('playing', playing);
 }
 
 function togglePlay() { if (audio.paused) audio.play().catch(()=>{}); else audio.pause(); }
@@ -511,14 +598,17 @@ function setVolume(v) {
 function toggleMute() { audio.volume = audio.volume === 0 ? 0.8 : 0; updateMuteBtn(); }
 function updateMuteBtn() {
   const m = audio.volume === 0;
-  $('.vol-icon').style.display = m ? 'none' : 'block';
-  $('.mute-icon').style.display = m ? 'block' : 'none';
+  $$('.vol-icon').forEach(el => el.style.display = m ? 'none' : 'block');
+  $$('.mute-icon').forEach(el => el.style.display = m ? 'block' : 'none');
 }
 
-function toggleShuffle() { isShuffle = !isShuffle; $('#shuffleBtn').classList.toggle('active', isShuffle); }
+function toggleShuffle() { 
+  isShuffle = !isShuffle; 
+  $$('#shuffleBtn, #karaokeShuffleBtn').forEach(el => el.classList.toggle('active', isShuffle)); 
+}
 function cycleRepeat() { 
   const modes = ['none','all','one']; repeatMode = modes[(modes.indexOf(repeatMode)+1)%3];
-  $('#repeatBtn').classList.toggle('active', repeatMode !== 'none');
+  $$('#repeatBtn, #karaokeRepeatBtn').forEach(el => el.classList.toggle('active', repeatMode !== 'none'));
   showToast('Repeat: ' + repeatMode);
 }
 
@@ -568,6 +658,21 @@ function bindPlayerControls() {
   $('#npFavBtn')?.addEventListener('click', () => {
     const s = filteredSongs[currentIndex];
     if (s) toggleFavorite(s.id);
+  });
+
+  // Karaoke binds
+  $('#karaokeToggle')?.addEventListener('click', () => toggleKaraoke());
+  $('#lyricsKaraokeToggle')?.addEventListener('click', () => toggleKaraoke());
+  $('#karaokeCloseBtn')?.addEventListener('click', () => toggleKaraoke(false));
+  $('#karaokePlayBtn')?.addEventListener('click', togglePlay);
+  $('#karaokeNextBtn')?.addEventListener('click', nextSong);
+  $('#karaokePrevBtn')?.addEventListener('click', prevSong);
+  $('#karaokeShuffleBtn')?.addEventListener('click', toggleShuffle);
+  $('#karaokeRepeatBtn')?.addEventListener('click', cycleRepeat);
+  $('#karaokeMuteBtn')?.addEventListener('click', toggleMute);
+  $('#karaokeSeekBarWrap')?.addEventListener('click', e => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
   });
 }
 
@@ -651,8 +756,17 @@ audio.ontimeupdate = () => {
   if($('#seekBarFill')) $('#seekBarFill').style.width = p;
   if($('#currentTime')) $('#currentTime').textContent = formatTime(audio.currentTime);
   syncLyrics(audio.currentTime + 0.15);
+
+  if (isKaraoke) {
+    if($('#karaokeSeekBarFill')) $('#karaokeSeekBarFill').style.width = p;
+    if($('#karaokeCurrentTime')) $('#karaokeCurrentTime').textContent = formatTime(audio.currentTime);
+    syncKaraokeLyrics(audio.currentTime + 0.15);
+  }
 };
-audio.onloadedmetadata = () => { if($('#totalTime')) $('#totalTime').textContent = formatTime(audio.duration); };
+audio.onloadedmetadata = () => { 
+  if($('#totalTime')) $('#totalTime').textContent = formatTime(audio.duration); 
+  if($('#karaokeTotalTime')) $('#karaokeTotalTime').textContent = formatTime(audio.duration); 
+};
 audio.onended = nextSong;
 audio.onplay = updatePlayBtn;
 audio.onpause = updatePlayBtn;

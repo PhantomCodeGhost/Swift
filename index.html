@@ -190,6 +190,11 @@
       </div>
 
       <div class="panel-tab-content" id="tabLyrics">
+        <div style="display: flex; justify-content: flex-end; padding: 0 16px 12px 16px;">
+          <button class="btn btn-secondary small" id="lyricsKaraokeToggle" style="display: flex; align-items: center; gap: 6px; font-size: 0.75rem; border-radius: 8px; padding: 6px 12px; border: 1px solid var(--glass-border); width: 100%; justify-content: center;">
+            <i data-lucide="mic-2" style="width: 14px; height: 14px;"></i> Full Screen Karaoke
+          </button>
+        </div>
         <div class="lyrics-container" id="lyricsContainer"></div>
       </div>
     </aside>
@@ -253,12 +258,80 @@
           </div>
           <input type="range" class="volume-input" id="volumeInput" min="0" max="100" value="80" />
         </div>
+        <button class="ctrl-btn small" id="karaokeToggle" title="Karaoke Mode">
+          <i data-lucide="mic-2"></i>
+        </button>
         <button class="ctrl-btn small" id="queueToggle">
           <i data-lucide="list"></i>
         </button>
         <button class="ctrl-btn small" id="downloadBtn">
           <i data-lucide="download"></i>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Karaoke View (Fullscreen Overlay) -->
+  <div class="karaoke-view hidden" id="karaokeView">
+    <div class="karaoke-bg" id="karaokeBg"></div>
+    <div class="karaoke-header">
+      <div class="karaoke-song-info">
+        <h2 class="karaoke-title" id="karaokeTitle">—</h2>
+        <p class="karaoke-artist" id="karaokeArtist">—</p>
+      </div>
+      <button class="karaoke-close-btn" id="karaokeCloseBtn" title="Exit Karaoke">
+        <i data-lucide="minimize-2"></i>
+      </button>
+    </div>
+    
+    <div class="karaoke-body">
+      <div class="karaoke-art-section">
+        <div class="karaoke-artwork-wrap">
+          <div class="karaoke-artwork" id="karaokeArtwork">
+            <i data-lucide="music" style="width:120px;height:120px;opacity:0.2"></i>
+          </div>
+        </div>
+      </div>
+      <div class="karaoke-lyrics-section">
+        <div class="karaoke-lyrics-container" id="karaokeLyricsContainer"></div>
+      </div>
+    </div>
+
+    <div class="karaoke-footer">
+      <div class="karaoke-controls-wrap">
+        <div class="karaoke-seek-row">
+          <span class="time-label" id="karaokeCurrentTime">0:00</span>
+          <div class="seek-bar-wrap" id="karaokeSeekBarWrap">
+            <div class="seek-bar-bg">
+              <div class="seek-bar-fill" id="karaokeSeekBarFill"></div>
+              <div class="seek-bar-thumb" id="karaokeSeekBarThumb"></div>
+            </div>
+          </div>
+          <span class="time-label" id="karaokeTotalTime">0:00</span>
+        </div>
+        
+        <div class="karaoke-playback-controls">
+          <button class="ctrl-btn" id="karaokeShuffleBtn" title="Shuffle">
+            <i data-lucide="shuffle"></i>
+          </button>
+          <button class="ctrl-btn" id="karaokePrevBtn">
+            <i data-lucide="skip-back"></i>
+          </button>
+          <button class="ctrl-btn play-btn" id="karaokePlayBtn">
+            <i data-lucide="play" class="play-icon"></i>
+            <i data-lucide="pause" class="pause-icon" style="display:none"></i>
+          </button>
+          <button class="ctrl-btn" id="karaokeNextBtn">
+            <i data-lucide="skip-forward"></i>
+          </button>
+          <button class="ctrl-btn" id="karaokeRepeatBtn" title="Repeat">
+            <i data-lucide="repeat"></i>
+          </button>
+          <button class="ctrl-btn" id="karaokeMuteBtn">
+            <i data-lucide="volume-2" class="vol-icon"></i>
+            <i data-lucide="volume-x" class="mute-icon" style="display:none"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
